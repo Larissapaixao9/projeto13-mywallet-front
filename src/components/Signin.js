@@ -1,23 +1,55 @@
 import axios from 'axios';
-import React from 'react'
+import React, { useContext } from 'react'
 import { ThreeDots } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom"
 import styled from 'styled-components'
 import Signup from './Signup';
+import userContext from '../contexts/UserCoontext'
+import home from './Home'
 
 export default function Signin() {
-    const [loading,setLoading]=React.useState(false)
+    const navigate=useNavigate()
+    const context=useContext(userContext)
 
-    function userLogin(){
+    const [loading,setLoading]=React.useState(false)
+    const [userLoginData,setUserLoginData]=React.useState(
+        {
+            email:"",
+            password:""
+        }
+    )
+
+    function userLogin(e){
+        e.preventDefault()
         setLoading(true);
+        const promise=axios.post("http://localhost:7979/login", userLoginData);
+        promise.then((response)=>{
+            const apiData=response.data
+            console.log(apiData)
+            const { token } = apiData
+            localStorage.setItem('token',token)
+            context.setUserdata(apiData);
+           
+
+                if(token){
+                    navigate('/home')
+                }
+              
+      
+        })
+
+        promise.catch((response)=>{
+            alert('Não foi possivel fazer login. Tente novamente');
+            setLoading(false)
+        })
     }
   return (
    
     <StyleloginPage>
         <h1>MyWallet</h1>
         <form onSubmit={userLogin}>
-            <input placeholder='email' type='text'/>
-            <input placeholder='senha' id="password" type='password'/>
+            <input placeholder='email' value={userLoginData.email} type='text' onChange={(e)=>setUserLoginData({...userLoginData, email:e.target.value})}/>
+            <input placeholder='senha' value={userLoginData.password} id="password" type='password' onChange={(e)=>setUserLoginData({ ...userLoginData, password:e.target.value })}/>
             <button type='submit'>{loading ? <ThreeDots color='#FFF' class='ponto' height='13px' width='51px' margin='0 auto'/> : <div>Entrar</div>}  </button>
         </form>
         <Link to='/signup'>

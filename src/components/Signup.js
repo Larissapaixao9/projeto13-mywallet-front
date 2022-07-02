@@ -3,27 +3,68 @@ import axios from 'axios';
 import { ThreeDots } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom"
 import styled from 'styled-components'
-//import Signin from './Signin';
+import Signin from './Signin';
 
 function Signup() {
 
+    const navigate=useNavigate()
 const [loading,setLoading]=React.useState(false)
-function userSignup(){
-  setLoading(true)
+const [userLogpData,setUserLogupData]=React.useState({
+    name:"",
+    email:"",
+    password:"",
+    confirm:""
+})
+function userSignup(e){
+    e.preventDefault()
+    setLoading(true)
+
+  const promise=axios.post('http://localhost:7979/logup', userLogpData);
+  promise.then((response)=>{
+      console.log(response.data)
+      const logupinfos=response.data;
+        navigate('/')
+  })
+
+  promise.catch((err)=>{
+    alert('Não foi possivel fazer login. Tente novamente');
+    console.log(err)
+    setLoading(false)
+})
+
 }
 
   return (
     <Stylelognup>
     <h1>MyWallet</h1>
     <form onSubmit={userSignup}>
-        <input placeholder='nome' type='text'/>
-        <input placeholder='email' type='text'/>
-        <input placeholder='senha' id="password" type='password'/>
-        <input placeholder='confirmar senha' id="password" type='password'/>
-        <button type='submit'>{loading ? <ThreeDots color='#FFF' class='ponto' height='13px' width='51px' margin='0 auto'/> : <div>Entrar</div>}  </button>
+        <input placeholder='nome' type='text' value={userLogpData.name}
+         onChange={(e)=>setUserLogupData(
+             {...userLogpData, 
+             name:e.target.value})}/>
+
+        <input placeholder='email' type='text' value={userLogpData.email}
+        onChange={(e)=>{
+            setUserLogupData({...userLogpData, email:e.target.value})
+        }}/>
+
+        <input placeholder='senha' id="password" type='password' value={userLogpData.password}
+        onChange={
+            (e)=>{
+                setUserLogupData({...userLogpData, password:e.target.value})
+            }
+        }/>
+
+        <input placeholder='confirmar senha' id="password" type='password' value={userLogpData.confirm}
+        onChange={
+            (e)=>{
+            setUserLogupData({...userLogpData, confirm:e.target.value})}
+        }
+        />
+        <button type='submit'>{loading ? <ThreeDots color='#FFF' class='ponto' height='13px' width='51px' margin='0 auto'/> : <div>Cadastrar</div>}  </button>
     </form>
     <Link to='/'>
-        <h3>Já tem uma conta? Entre agora!</h3>
+        <h3>Já possui uma conta? Entre agora!</h3>
     </Link>
 </Stylelognup>
   )
