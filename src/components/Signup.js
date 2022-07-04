@@ -19,7 +19,7 @@ function userSignup(e){
     e.preventDefault()
     setLoading(true)
 
-  const promise=axios.post('http://localhost:7979/logup', userLogpData);
+  const promise=axios.post('http://localhost:7980/logup', userLogpData);
   promise.then((response)=>{
       console.log(response.data)
       const logupinfos=response.data;

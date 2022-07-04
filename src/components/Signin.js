@@ -7,9 +7,11 @@ import Signup from './Signup';
 import userContext from '../contexts/UserCoontext'
 import home from './Home'
 
+
 export default function Signin() {
     const navigate=useNavigate()
     const context=useContext(userContext)
+
 
     const [loading,setLoading]=React.useState(false)
     const [userLoginData,setUserLoginData]=React.useState(
@@ -22,7 +24,7 @@ export default function Signin() {
     function userLogin(e){
         e.preventDefault()
         setLoading(true);
-        const promise=axios.post("http://localhost:7979/login", userLoginData);
+        const promise=axios.post("http://localhost:7980/login", userLoginData);
         promise.then((response)=>{
             const apiData=response.data
             console.log(apiData)
@@ -98,6 +100,9 @@ const StyleloginPage=styled.div`
         margin-top:1vh;
         margin-bottom:1vh;
         padding:1vh;
+        padding: 10px;
+        border: 1px solid #D5D5D5;
+        border-radius: 5px;
     }
     button{
         width:40vh;
@@ -114,3 +119,12 @@ const StyleloginPage=styled.div`
     }
 
 `
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 30px 0 25px;
+`;
