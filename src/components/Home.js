@@ -13,14 +13,16 @@ export default function Home(){
 
     const navigate=useNavigate()
 
-    const { userData, setUserdata, config } = useContext(userContext)
+    const { userData, setUserdata, config, token } = useContext(userContext)
     const [cashflowData,setCashflowData]=React.useState([])
     const [mytotal,setMytotal]=React.useState([])
     const context=useContext(userContext)
-    const token = localStorage.getItem("token");
+    
+    //const token = localStorage.getItem("token");
+    
    
     const { name } = userData
-    let sum=0;
+    
     console.log(name)
 
     function exitApp() {
@@ -39,10 +41,12 @@ export default function Home(){
         promise.then((response) => {
             const data=response.data; 
             console.log('funfou a requisição da rota home')
-
+            const { userPosts } =data
+            let sum=0;
             console.log(data)
-            const { value } = data
+            
             setCashflowData([...data]);
+            
 
             //realiza a soma dos valores
             data.forEach((item)=>{
@@ -71,12 +75,13 @@ export default function Home(){
         {cashflowData.length===0 ? 
         <h4>Não há registros de entrada ou saída</h4> 
             : 
-            <Flex2 >
+            (<Flex2 >
             {cashflowData.map((item)=><ShowcashFlow {...item} />)}
             
             
-             <SpanSaldo > SALDO<span style={{ color: mytotal<0 ? "red" : "green"}}>{mytotal}</span> </SpanSaldo></Flex2>
+             <SpanSaldo > SALDO<span style={{ color: mytotal<0 ? "red" : "green"}}>{mytotal}</span> </SpanSaldo></Flex2>)
             
+        
         }
             </Whitebox>
 
@@ -139,7 +144,7 @@ const SpanSaldo=styled.span`
 
     span{
       text-align:right;
-      margin-left:50%;
+      margin-left:65%;
     }
 `
 const SpanValue=styled.span`
@@ -191,7 +196,7 @@ const Whitebox=styled.div`
     text-align:center;
     h4{
         color:#868686;
-        margin:50% auto;
+        margin:0% auto;
     }
     color:black;
 `

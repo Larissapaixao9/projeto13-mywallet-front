@@ -100,8 +100,6 @@ const Button = styled.button`
   border-radius: 4.5px;
   
   cursor: pointer;
-  pointer-events: ${(props) => props.disabled ? "none" : "all"};
-  opacity: ${(props) => props.disabled ? 0.7 : 1};
   
   font-size: 20px;
   line-height: 26px;
@@ -132,10 +130,6 @@ const Input = styled.input`
   
   font-size: 20px;
   line-height: 25px;
-  pointer-events: ${(props) => props.disabled ? "none" : "all"};
-  
-  background-color: ${(props) => props.disabled ? "#F2F2F2" : "#FFFFFF"};
-  color: ${(props) => props.disabled ? "#AFAFAF" : "#000000"};
   &::placeholder{
     color: #000000;
   }

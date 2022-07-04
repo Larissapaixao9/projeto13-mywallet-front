@@ -30,6 +30,7 @@ export default function Signin() {
             console.log(apiData)
             const { token } = apiData
             localStorage.setItem('token',token)
+            context.setToken(token)
             context.setUserdata(apiData);
            
 
