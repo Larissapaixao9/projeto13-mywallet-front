@@ -20,6 +20,7 @@ export default function Home(){
     const token = localStorage.getItem("token");
     console.log(userData)
     const { name } = userData
+    let sum=0;
     console.log(name)
 
     function exitApp() {
@@ -40,15 +41,23 @@ export default function Home(){
         promise.then((response) => {
             const data=response.data; //
             console.log('funfou a requisição da rota home')
-            const { userPosts } =data
-            let total=(userPosts.value)
+            //const { userPosts } =data
+           // let total=(userPosts.value)
             // setMytotal(...total)
-            console.log(userPosts)
+           // console.log(userPosts)
             console.log(data)
-            const { value } = userPosts
-            console.log(value)
-            setCashflowData(...userPosts);
-         
+            const { value } = data
+            //const { value } = userPosts
+            //console.log(total)
+            setCashflowData([...data]);
+            
+            for(let i=0;i<data.length;i++){
+               sum+=data[i].value
+               
+            }
+            console.log(`essa é a soma ${sum}`)
+            console.log(mytotal)
+           
         })
         promise.catch((err) => {
             console.log("erro", err.response.status);
@@ -67,7 +76,7 @@ export default function Home(){
             </Header>
 
             <Whitebox  >
-        {cashflowData.length==0? 
+        {!cashflowData ? 
         <h4>Não há registros de entrada ou saída</h4> 
             : 
        //<div { ...Object.keys(cashflowData).map(item=>item)} />
@@ -76,7 +85,14 @@ export default function Home(){
     //    })
 
             //<ShowcashFlow props={ShowcashFlow}/>
-            <h4>{Object.keys(cashflowData).map(item=>item.value)}</h4>
+            <Flex2 >
+            {cashflowData.map((item)=><ShowcashFlow {...item} />)}
+            
+            
+             <SpanSaldo>SALDO</SpanSaldo></Flex2>
+                 
+            
+        
         }
             </Whitebox>
 
@@ -97,18 +113,29 @@ export default function Home(){
         </HomeStyle>
     )
     function ShowcashFlow(props){
+        let somar=0;
+        const arr=[];
         const { value, description, now } = props
+        arr.push(value)
+        arr.forEach((item)=>setMytotal([item]))
+        //setMytotal([...value])
+        console.log(mytotal)
+        console.log(arr)
+        
         console.log(value)
+        console.log(`array de valores ${mytotal}`)
         return(
             <Flex>
-                    <Flex >
-                        <Span >{now}</Span>
+                    <Flexnowdescription>
+                        <SpanNow>{now}</SpanNow>
                         <Span>{description}</Span>
-                    </Flex>
-
-                    <Span align="right" >
+                    </Flexnowdescription>
+                    <SpanValue align="right" >
                     {value}
-                     </Span>
+                     </SpanValue>
+                     <span>
+
+                     </span>
             </Flex>
         )
     }
@@ -124,7 +151,19 @@ const Flex=styled.div`
 const Span=styled.div`
     color:black;
 `
+const SpanNow=styled.div`
+    color:#C6C6C6;
+`
 
+const SpanSaldo=styled.span`
+   
+    text-align:left;
+    margin-top:30%;
+`
+const SpanValue=styled.div`
+    color:{value>0? #green : #C70000};
+    text-align:right;
+`
 
 const HomeStyle=styled.div`
     *box-sizing:border-box;
@@ -173,6 +212,13 @@ const Whitebox=styled.div`
     }
     color:black;
 `
+
+const Flexnowdescription=styled.div`
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap: 10px;
+`
 const ContainerMenu = styled.div`
   width: 90%;
   height: 70px;
@@ -193,6 +239,11 @@ const Footer=styled.div`
        border:1px solid #FFF;
     }
 `
+const Flex2=styled.div`
+    display:flex;
+    flex-direction:column
+`
+
 
 const ContainerEntries = styled.div`
   width: 90%;

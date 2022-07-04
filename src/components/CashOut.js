@@ -9,7 +9,7 @@ export default function CashOut() {
   const navigate=useNavigate()
   const [loading,setLoading]=React.useState(false)
   const [cash,setCash]=React.useState({
-    value:"",
+    value:"-",
     description:""
   })
 
