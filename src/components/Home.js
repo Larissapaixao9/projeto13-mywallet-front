@@ -18,7 +18,7 @@ export default function Home(){
     const [mytotal,setMytotal]=React.useState([])
     const context=useContext(userContext)
     const token = localStorage.getItem("token");
-    console.log(userData)
+   
     const { name } = userData
     let sum=0;
     console.log(name)
@@ -27,9 +27,7 @@ export default function Home(){
         localStorage.removeItem("token");
         navigate("/");
     }
-
-
-
+    
     //dando Get na rota Home p/ obter os dados do usuario
     useEffect(() => {
         const promise = axios.get("http://localhost:7980/home", 
@@ -39,32 +37,26 @@ export default function Home(){
             }
         });
         promise.then((response) => {
-            const data=response.data; //
+            const data=response.data; 
             console.log('funfou a requisição da rota home')
-            //const { userPosts } =data
-           // let total=(userPosts.value)
-            // setMytotal(...total)
-           // console.log(userPosts)
+
             console.log(data)
             const { value } = data
-            //const { value } = userPosts
-            //console.log(total)
             setCashflowData([...data]);
+
+            //realiza a soma dos valores
+            data.forEach((item)=>{
+              sum+=item.value
+            })
+            setMytotal(sum)
             
-            for(let i=0;i<data.length;i++){
-               sum+=data[i].value
-               
-            }
-            console.log(`essa é a soma ${sum}`)
-            console.log(mytotal)
+            console.log(`ver soma ${mytotal}`)
            
         })
         promise.catch((err) => {
             console.log("erro", err.response.status);
         })
     }, [])
-
-
 
     return(
         <HomeStyle>
@@ -76,23 +68,15 @@ export default function Home(){
             </Header>
 
             <Whitebox  >
-        {!cashflowData ? 
+        {cashflowData.length===0 ? 
         <h4>Não há registros de entrada ou saída</h4> 
             : 
-       //<div { ...Object.keys(cashflowData).map(item=>item)} />
-    //    Object.keys(cashflowData).map((item,i)=>{
-    //        return <ShowcashFlow key={i} {...item} />
-    //    })
-
-            //<ShowcashFlow props={ShowcashFlow}/>
             <Flex2 >
             {cashflowData.map((item)=><ShowcashFlow {...item} />)}
             
             
-             <SpanSaldo>SALDO</SpanSaldo></Flex2>
-                 
+             <SpanSaldo > SALDO<span style={{ color: mytotal<0 ? "red" : "green"}}>{mytotal}</span> </SpanSaldo></Flex2>
             
-        
         }
             </Whitebox>
 
@@ -117,20 +101,13 @@ export default function Home(){
         const arr=[];
         const { value, description, now } = props
         arr.push(value)
-        arr.forEach((item)=>setMytotal([item]))
-        //setMytotal([...value])
-        console.log(mytotal)
-        console.log(arr)
-        
-        console.log(value)
-        console.log(`array de valores ${mytotal}`)
         return(
             <Flex>
                     <Flexnowdescription>
                         <SpanNow>{now}</SpanNow>
                         <Span>{description}</Span>
                     </Flexnowdescription>
-                    <SpanValue align="right" >
+                    <SpanValue align="right" style={{ color: value<0 ? "red" : "green"}} >
                     {value}
                      </SpanValue>
                      <span>
@@ -159,10 +136,15 @@ const SpanSaldo=styled.span`
    
     text-align:left;
     margin-top:30%;
+
+    span{
+      text-align:right;
+      margin-left:50%;
+    }
 `
-const SpanValue=styled.div`
-    color:{value>0? #green : #C70000};
-    text-align:right;
+const SpanValue=styled.span`
+    align-items:right;
+    margin-left:46%;
 `
 
 const HomeStyle=styled.div`
@@ -208,7 +190,8 @@ const Whitebox=styled.div`
     padding:12px;
     text-align:center;
     h4{
-        color:red;
+        color:#868686;
+        margin:50% auto;
     }
     color:black;
 `

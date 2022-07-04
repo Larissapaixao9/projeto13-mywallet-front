@@ -9,7 +9,7 @@ export default function CashOut() {
   const navigate=useNavigate()
   const [loading,setLoading]=React.useState(false)
   const [cash,setCash]=React.useState({
-    value:"-",
+    value:"",
     description:""
   })
 
@@ -41,6 +41,7 @@ export default function CashOut() {
           placeholder="Valor com sinal negativo"
           name="value"
           value={cash.value}
+          pattern="^-\d+$" 
          onChange={(e)=>setCash({ ...cash, value:e.target.value })}
         />
         <Input
@@ -48,6 +49,7 @@ export default function CashOut() {
           placeholder="Descrição"
           name="description"
           value={cash.description}
+          
           onChange={(e)=>setCash({ ...cash, description:e.target.value })}
         />
 
